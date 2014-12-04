@@ -14,7 +14,8 @@ class UsersController < ApplicationController
 
   # GET /users/new
   def new
-    @user = User.new
+    current_or_guest_user
+    redirect_to posts_url
   end
 
   # GET /users/1/edit

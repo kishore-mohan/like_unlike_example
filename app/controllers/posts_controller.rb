@@ -1,5 +1,7 @@
 class PostsController < ApplicationController
-  before_action :set_post, only: [:show, :edit, :update, :destroy]
+  before_action :set_post, only: [:vote_items, :show, :edit, :update, :destroy]
+
+  before_action :authenticate_user!, except:[:index]
 
   # GET /posts
   # GET /posts.json
@@ -61,6 +63,17 @@ class PostsController < ApplicationController
     end
   end
 
+  def vote_items
+    if params[:vote] == "up"
+      @post.liked_by current_user
+    elsif params[:vote] == "down"
+      @post.disliked_by current_user
+    end
+    @post.reload
+    votes = [@post.get_upvotes.size, @post.get_downvotes.size]
+    render :json => votes
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_post
@@ -69,6 +82,6 @@ class PostsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def post_params
-      params[:post]
+      params.require(:post).permit(:description).merge(user_id: current_user.id)
     end
 end
