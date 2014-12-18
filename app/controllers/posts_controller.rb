@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-  before_action :set_post, only: [:vote_items, :show, :edit, :update, :destroy]
+  before_action :set_post, only: [:vote_items, :show, :edit, :update, :destroy] 
 
   before_action :authenticate_user!, except:[:index]
 
